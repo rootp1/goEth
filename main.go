@@ -24,6 +24,12 @@ func (b *Block) SetHash() {
 	b.Hash = hash[:]
 }
 
-func main() { 
+func NewBlock(data string, prevBlockHash []byte) *Block {
+	block := &Block{time.Now().Unix(), []byte(data), prevBlockHash, []byte{}}
+	block.SetHash()
+	return block
+}
 
+func main() { 
+fmt.Println("hello")
 }
