@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"log"
+	"bytes"
 	"strconv"
 	"time"
 
@@ -28,6 +29,16 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 	block := &Block{time.Now().Unix(), []byte(data), prevBlockHash, []byte{}}
 	block.SetHash()
 	return block
+}
+
+type Blockchain struct {
+	blocks []*Block
+}
+
+func (bc *Blockchain) AddBlock(data string) {
+	prevBlock := bc.blocks[len(bc.blocks)-1]
+	newBlock := NewBlock(data, prevBlock.Hash)
+	bc.blocks = append(bc.blocks, newBlock)
 }
 
 func main() { 
