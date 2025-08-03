@@ -6,6 +6,8 @@ import (
 	"bytes"
 	"strconv"
 	"time"
+	"math/big"
+
 
 )
 
@@ -48,6 +50,30 @@ func NewBlockchain() *Blockchain {
 	return &Blockchain{[]*Block{NewGenesisBlock()}}
 }
 
-func main() { 
-fmt.Println("hello")
+const targetBits = 24
+
+type ProofOfWork struct {
+	block  *Block
+	target *big.Int
+}
+
+func NewProofOfWork(b *Block) *ProofOfWork {
+	target := big.NewInt(1)
+	target.Lsh(target, uint(256-targetBits))
+
+	pow := &ProofOfWork{b, target}
+
+	return pow
+}
+func main() {
+	bc := NewBlockchain()
+
+	bc.AddBlock("Send 1 BTC to daksh")
+	bc.AddBlock("Send 2 more BTC to daksh")
+
+	for _, block := range bc.blocks {
+		fmt.Printf("Prev. hash: %x\n", block.PrevBlockHash)
+		fmt.Printf("Data: %s\n", block.Data)
+		fmt.Printf("Hash: %x\n", block.Hash)
+	}
 }
