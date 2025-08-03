@@ -65,6 +65,26 @@ func NewProofOfWork(b *Block) *ProofOfWork {
 
 	return pow
 }
+
+func (pow *ProofOfWork) prepareData(nonce int) []byte {
+	data := bytes.Join(
+		[][]byte{
+			pow.block.PrevBlockHash,
+			pow.block.Data,
+			IntToHex(pow.block.Timestamp),
+			IntToHex(int64(targetBits)),
+			IntToHex(int64(nonce)),
+		},
+		[]byte{},
+	)
+
+	return data
+}
+
+func IntToHex(n int64) []byte {
+	return []byte(strconv.FormatInt(n, 16))
+}
+
 func main() {
 	bc := NewBlockchain()
 
