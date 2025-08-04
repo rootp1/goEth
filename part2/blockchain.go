@@ -119,6 +119,18 @@ var (
 	maxNonce = math.MaxInt64
 )
 
+func (pow *ProofOfWork) Validate() bool {
+	var hashInt big.Int
+
+	data := pow.prepareData(pow.block.Nonce)
+	hash := sha256.Sum256(data)
+	hashInt.SetBytes(hash[:])
+
+	isValid := hashInt.Cmp(pow.target) == -1
+
+	return isValid
+}
+
 func main() {
 	bc := NewBlockchain()
 
