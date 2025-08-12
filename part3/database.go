@@ -1,3 +1,5 @@
+package main
+
 func (b *Block) Serialize() []byte {
     var result bytes.Buffer
     encoder := gob.NewEncoder(&result)
@@ -12,4 +14,33 @@ func DeserializeBlock(d []byte) *Block {
 	err := decoder.Decode(&block)
 
 	return &block
+}
+
+func NewBlockchain() *Blockchain {
+	var tip []byte
+	db, err := bolt.Open(dbFile, 0600, nil)
+	err = db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(blocksBucket))po-=9
+
+		if b == nil {
+			genesis := NewGenesisBlock()
+			b, err := tx.CreateBucket([]byte(blocksBucket))
+			err = b.Put(genesis.Hash, genesis.Serialize())
+			err = b.Put([]byte("l"), genesis.Hash)
+			tip = genesis.Hash
+		} else {
+			tip = b.Get([]byte("l"))
+		}
+
+		return nil
+	})
+
+	bc := Blockchain{tip, db}
+
+	return &bc
+}	
+
+type Blockchain struct {
+	tip []byte
+	db  *bolt.DB
 }
