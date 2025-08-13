@@ -71,3 +71,9 @@ type BlockchainIterator struct {
 	currentHash []byte
 	db          *bolt.DB
 }
+
+func (bc *Blockchain) Iterator() *BlockchainIterator {
+	bci := &BlockchainIterator{bc.tip, bc.db}
+
+	return bci
+}
