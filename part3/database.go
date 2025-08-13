@@ -66,3 +66,8 @@ func (bc *Blockchain) AddBlock(data string) {
 		return nil
 	})
 }
+
+type BlockchainIterator struct {
+	currentHash []byte
+	db          *bolt.DB
+}
